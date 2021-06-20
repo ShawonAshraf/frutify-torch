@@ -1,11 +1,10 @@
 import os
-import torch
 from torch.utils.data import Dataset
-from torchvision import transforms, utils
-from skimage import io, transform
-import numpy as np
+from torchvision import transforms
+from skimage import io
 
 from image_utils import generate_labels, get_label_from_file_name
+from image_transforms import Rescale, RotateImage, RandomCrop, ToTensor
 
 IMAGE_FOLDER_NAME = "dataset"
 IMAGE_DIR_PATH = os.path.join(os.getcwd(), IMAGE_FOLDER_NAME)
@@ -14,19 +13,42 @@ FRUIT_NAMES = ["apple", "orange", "banana", "mango"]
 
 
 class FruitImageDataset(Dataset):
+    """
+    set test to true for test datasets
+    and False for training/validation datasets
+    """
+
     def __init__(self,
-                 image_height=224,
-                 image_width=224,
-                 dataset_path=IMAGE_DIR_PATH,
-                 transform=None):
+                 test,
+                 image_height=300,
+                 image_width=300,
+                 dataset_path=IMAGE_DIR_PATH):
         self.labels = generate_labels(FRUIT_NAMES)
 
         self.h = image_height
         self.w = image_width
         self.dataset_path = dataset_path
-        self.transform = transform
 
         self.image_file_names = os.listdir(self.dataset_path)
+
+        # compose transforms
+        if not test:
+            # for train run all the defined transforms
+            self.transform = transforms.Compose([
+                Rescale((self.h, self.w)),
+                RandomCrop(224),  # for inception, 224
+                RotateImage(-90.0),
+                RotateImage(90.0),
+                RotateImage(-180.0),
+                RotateImage(180.0),
+                ToTensor()
+            ])
+        else:
+            # for testing apply only rescale and totensor
+            self.transform = transforms.Compose([
+                Rescale((self.h, self.w)),
+                ToTensor()
+            ])
 
     def __len__(self):
         return len(self.image_file_names)
@@ -44,12 +66,18 @@ class FruitImageDataset(Dataset):
 
         item = {
             "image": image,
-            "label": label,
+            "label": self.labels.index(label),  # index as label
             "file_name": image_name
         }
 
-        # apply transforms if mentioned
-        if self.transform:
-            item = self.transform(item)
+        # apply transforms
+        item = self.transform(item)
 
         return item
+
+
+dt = FruitImageDataset(test=True)
+for i in range(len(dt)):
+    print(i, dt[i]["image"].size(), dt[i]["file_name"])
+    break
+

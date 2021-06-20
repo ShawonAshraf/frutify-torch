@@ -1,6 +1,5 @@
 # source : https://pytorch.org/tutorials/beginner/data_loading_tutorial.html#transforms
-
-
+import torch
 from skimage import io, transform
 import numpy as np
 
@@ -32,7 +31,7 @@ class Rescale(object):
 
         new_h, new_w = int(new_h), int(new_w)
 
-        img = transform.resize(image, (new_h, new_w))
+        image = transform.resize(image, (new_h, new_w))
 
         return {
             "image": image,
@@ -113,7 +112,7 @@ class ToTensor(object):
         image = image.transpose((2, 0, 1))
 
         return {
-            "image": image,
-            "label": label,
+            "image": torch.from_numpy(image),
+            "label": torch.tensor(label),
             "file_name": file_name
         }
