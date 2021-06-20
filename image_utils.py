@@ -67,7 +67,7 @@ def create_train_test_dev_set(all_file_names, train_ratio):
     total_len = len(all_file_names)
 
     train_len = int(train_ratio * total_len)
-    val_len = int((1 - train_ratio) * total_len)
+    val_len = int((1 - train_ratio - 0.1) * total_len)
     test_len = total_len - train_len - val_len
 
     train_set, val_set, test_set = D.random_split(

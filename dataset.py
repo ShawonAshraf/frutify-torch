@@ -22,7 +22,6 @@ class FruitImageDataset(Dataset):
     def __init__(self,
                  dataset_root,
                  image_file_names,
-                 test,
                  image_height=299,
                  image_width=299):
         self.labels = generate_labels()
@@ -34,8 +33,6 @@ class FruitImageDataset(Dataset):
         self.image_file_names = image_file_names
 
         # compose transforms
-
-        # for testing apply only rescale and totensor
         self.transform = transforms.Compose([
             Rescale((self.h, self.w)),
             ToTensor()
