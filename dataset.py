@@ -6,11 +6,6 @@ from skimage import io
 from image_utils import generate_labels, get_label_from_file_name
 from image_transforms import Rescale, RotateImage, RandomCrop, ToTensor
 
-IMAGE_FOLDER_NAME = "dataset"
-IMAGE_DIR_PATH = os.path.join(os.getcwd(), IMAGE_FOLDER_NAME)
-
-FRUIT_NAMES = ["apple", "orange", "banana", "mango"]
-
 
 class FruitImageDataset(Dataset):
     """
@@ -22,16 +17,16 @@ class FruitImageDataset(Dataset):
     """
 
     def __init__(self,
+                 dataset_root,
                  image_file_names,
                  test,
                  image_height=300,
-                 image_width=300,
-                 dataset_path=IMAGE_DIR_PATH):
-        self.labels = generate_labels(FRUIT_NAMES)
+                 image_width=300):
+        self.labels = generate_labels()
 
         self.h = image_height
         self.w = image_width
-        self.dataset_path = dataset_path
+        self.dataset_root = dataset_root
 
         self.image_file_names = image_file_names
 
@@ -63,7 +58,7 @@ class FruitImageDataset(Dataset):
         # imread requires full image path
         image = io.imread(
             os.path.join(
-                IMAGE_DIR_PATH, image_name
+                self.dataset_root, image_name
             )
         )
         label = get_label_from_file_name(image_name)
