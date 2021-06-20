@@ -200,3 +200,5 @@ dataset/
 
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,linux,macos,pycharm+all,virtualenv
+
+__pycache__/
