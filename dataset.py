@@ -16,9 +16,13 @@ class FruitImageDataset(Dataset):
     """
     set test to true for test datasets
     and False for training/validation datasets
+
+    image_file_names should contain the list of images
+    you want to include in the dataset (test / validation / train)
     """
 
     def __init__(self,
+                 image_file_names,
                  test,
                  image_height=300,
                  image_width=300,
@@ -29,7 +33,7 @@ class FruitImageDataset(Dataset):
         self.w = image_width
         self.dataset_path = dataset_path
 
-        self.image_file_names = os.listdir(self.dataset_path)
+        self.image_file_names = image_file_names
 
         # compose transforms
         if not test:
@@ -74,10 +78,3 @@ class FruitImageDataset(Dataset):
         item = self.transform(item)
 
         return item
-
-
-dt = FruitImageDataset(test=True)
-for i in range(len(dt)):
-    print(i, dt[i]["image"].size(), dt[i]["file_name"])
-    break
-
