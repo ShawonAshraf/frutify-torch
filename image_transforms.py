@@ -112,7 +112,7 @@ class ToTensor(object):
         image = image.transpose((2, 0, 1))
 
         return {
-            "image": torch.from_numpy(image),
+            "image": torch.from_numpy(image).float(),
             "label": torch.tensor(label),
             "file_name": file_name
         }

@@ -14,14 +14,17 @@ class FruitImageDataset(Dataset):
 
     image_file_names should contain the list of images
     you want to include in the dataset (test / validation / train)
+
+    images should be resized to 299x299 size
+    : https://pytorch.org/vision/stable/models.html#inception-v3
     """
 
     def __init__(self,
                  dataset_root,
                  image_file_names,
                  test,
-                 image_height=300,
-                 image_width=300):
+                 image_height=299,
+                 image_width=299):
         self.labels = generate_labels()
 
         self.h = image_height
@@ -31,23 +34,12 @@ class FruitImageDataset(Dataset):
         self.image_file_names = image_file_names
 
         # compose transforms
-        if not test:
-            # for train run all the defined transforms
-            self.transform = transforms.Compose([
-                Rescale((self.h, self.w)),
-                RandomCrop(224),  # for inception, 224
-                RotateImage(-90.0),
-                RotateImage(90.0),
-                RotateImage(-180.0),
-                RotateImage(180.0),
-                ToTensor()
-            ])
-        else:
-            # for testing apply only rescale and totensor
-            self.transform = transforms.Compose([
-                Rescale((self.h, self.w)),
-                ToTensor()
-            ])
+
+        # for testing apply only rescale and totensor
+        self.transform = transforms.Compose([
+            Rescale((self.h, self.w)),
+            ToTensor()
+        ])
 
     def __len__(self):
         return len(self.image_file_names)

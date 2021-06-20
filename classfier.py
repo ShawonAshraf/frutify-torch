@@ -16,37 +16,37 @@ class FrutifyClassifier(pl.LightningModule):
         self.num_labels = num_labels
         self.learning_rate = learning_rate
 
-        self.inceptionV3 = torchvision.models.inception_v3(pretrained=True)
-        num_features = self.inceptionV3.fc.in_features
+        self.model = torchvision.models.inception_v3(pretrained=True)
+        num_features = self.model.fc.in_features
 
-        self.inceptionV3.fc = nn.Linear(num_features, self.num_labels)
-
-        self.loss_fn = nn.CrossEntropyLoss()
+        self.model.fc = nn.Linear(num_features, self.num_labels)
+        self.softmax = nn.Softmax()
 
     def forward(self, x):
-        out = self.inceptionV3(x)
+        out, _ = self.model(x)
+        out = self.softmax(out)
         return out
 
     def configure_optimizers(self):
         return optim.Adam(self.parameters(), lr=self.learning_rate)
 
     def training_step(self, batch, batch_index):
+        loss_fn = nn.CrossEntropyLoss()
         image, label = batch["image"], batch["label"]
 
         out = self(image)
-        logits, _ = torch.max(out, dim=1)
-        loss = self.loss_fn(logits, label)
+        loss = loss_fn(out, label)
 
         return {
             "loss": loss
         }
 
-    def validation_step(self, batch, batch_index):
-        image, label = batch["image"], batch["label"]
-
-        out = self(image)
-        logits, _ = torch.max(out, dim=1)
-        loss = self.loss_fn(logits, label)
-
-        # log validation loss to progress bar
-        self.log('validation_loss', loss, prog_bar=True)
+    # def validation_step(self, batch, batch_index):
+    #     image, label = batch["image"], batch["label"]
+    #
+    #     out = self(image)
+    #     logits, _ = torch.max(out, dim=1)
+    #     loss = self.loss_fn(logits, label)
+    #
+    #     # log validation loss to progress bar
+    #     self.log('validation_loss', loss, prog_bar=True)
