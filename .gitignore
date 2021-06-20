@@ -198,6 +198,9 @@ $RECYCLE.BIN/
 # Dataset
 dataset/
 
+# Logs
+lightning_logs/
+
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,linux,macos,pycharm+all,virtualenv
 
