@@ -1,13 +1,17 @@
 import os
-import math
-import random
-
 import torch.utils.data as D
 
 IMAGE_FOLDER_NAME = "dataset"
 IMAGE_DIR_ROOT = os.path.join(os.getcwd(), IMAGE_FOLDER_NAME)
 
 FRUIT_NAMES = ["apple", "orange", "banana", "mango"]
+
+"""
+generates main label list which contains the 
+unique labels
+
+:returns a list containing the unique labels
+"""
 
 
 def generate_labels(fruit_names=FRUIT_NAMES):
@@ -20,22 +24,45 @@ def generate_labels(fruit_names=FRUIT_NAMES):
     return labels
 
 
-def get_label_from_file_name(file_name):
-    splits = file_name.split("_")
+"""
+gets the corresponding label from a file name
     # file name example: fresh_orange_1.jpg
     # the label is the first two tokens joined by _
+
+:param - an image file name
+:returns - label for the specific image file
+"""
+
+
+def get_label_from_file_name(file_name):
+    splits = file_name.split("_")
+
     label = "_".join(s for s in splits[:-1])
     return label
+
+
+"""
+gets all file names from the dataset root dir
+
+:returns - a list containing all file names
+"""
 
 
 def get_all_file_names(root_dir=IMAGE_DIR_ROOT):
     return os.listdir(root_dir)
 
 
+"""
+creates train test validation split on file names
+
 # train_ratio is a float number
 # https://stackoverflow.com/a/61818182/3316525
 
-# returns 3 lists, containing image names for train, validation and test sets
+:param - all file names as a list, train ratio
+:returns - 3 lists, containing image names for train, validation and test sets
+"""
+
+
 def create_train_test_dev_set(all_file_names, train_ratio):
     total_len = len(all_file_names)
 
@@ -48,7 +75,7 @@ def create_train_test_dev_set(all_file_names, train_ratio):
     )
 
     # random split returns a torch dataset
-    # but strings are required here!
+    # but dataset expects Strings
     train_set = [str(i) for i in train_set]
     test_set = [str(i) for i in test_set]
     val_set = [str(i) for i in val_set]
