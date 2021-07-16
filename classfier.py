@@ -7,6 +7,7 @@ import torchvision
 import os
 import copy
 import pytorch_lightning as pl
+import torchmetrics
 
 
 class FrutifyResnet101(pl.LightningModule):
@@ -27,6 +28,10 @@ class FrutifyResnet101(pl.LightningModule):
         n_features = self.__find_n_features()
 
         self.classifier = nn.Linear(n_features, num_labels)
+
+        # metrics
+        self.accuracy = torchmetrics.Accuracy()
+        self.f1 = torchmetrics.F1(num_classes=8)
 
     def __find_n_features(self):
         inp = torch.autograd.Variable(
@@ -58,8 +63,30 @@ class FrutifyResnet101(pl.LightningModule):
     def validation_step(self, batch, batch_index):
         image, label = batch["image"], batch["label"]
 
-        out = self.forward(image)
+        out = self(image)
         loss = F.nll_loss(out, label)
 
         # log validation loss to progress bar
-        self.log('validation_loss', loss, prog_bar=True)
+        self.log('validation_loss', loss, prog_bar=True, on_step=True)
+
+    def test_step(self, batch, batch_index):
+        image, true_label = batch["image"], batch["label"]
+
+        pred = self(image)
+        loss = F.nll_loss(pred, true_label)
+
+        self.accuracy(pred, true_label)
+        self.f1(pred, true_label)
+
+        self.log('test_loss', loss, prog_bar=True, on_step=True)
+
+    def test_end(self, outputs):
+        accuracy = self.accuracy.compute()
+        f1 = self.f1.compute()
+
+        print()
+        print("=============================")
+        print(f"accuracy = {accuracy}")
+        print(f"f1 = {f1}")
+        print("==============================")
+        print()

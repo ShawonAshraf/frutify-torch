@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # epochs
     arg_parser.add_argument("--epochs", required=True, type=int)
     # learning_rate
-    arg_parser.add_argument("--lr", type=int, required=True)
+    arg_parser.add_argument("--lr", type=float, required=True)
 
     args = arg_parser.parse_args()
 
@@ -66,4 +66,7 @@ if __name__ == "__main__":
         trainer = pl.Trainer(max_epochs=args.epochs)
 
     # call trainer
-    trainer.fit(clf, train_loader, validation_loader, test_loader)
+    trainer.fit(clf, train_loader, validation_loader)
+
+    # test
+    trainer.test(model=clf, test_dataloaders=test_loader)
