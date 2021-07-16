@@ -20,6 +20,8 @@ if __name__ == "__main__":
     arg_parser.add_argument("--gpu_id", type=int)
     # number of workers to use for dataloader
     arg_parser.add_argument("--num_workers", type=int)
+    # split ratio
+    arg_parser.add_argument("--split", type=float, default=0.8, required=True, help="train-test split ratio")
 
     # batch size
     arg_parser.add_argument("--batch_size", type=int, required=True)
