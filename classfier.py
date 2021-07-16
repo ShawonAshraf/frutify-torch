@@ -9,9 +9,9 @@ import copy
 import pytorch_lightning as pl
 
 
-class FrutifyClassifier(pl.LightningModule):
+class FrutifyResnet101(pl.LightningModule):
     def __init__(self, num_labels, learning_rate):
-        super(FrutifyClassifier, self).__init__()
+        super(FrutifyResnet101, self).__init__()
 
         self.save_hyperparameters()
 

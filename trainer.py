@@ -7,7 +7,7 @@ from dataset import FruitImageDataset
 from torch.utils.data import DataLoader
 
 import pytorch_lightning as pl
-from classfier import FrutifyClassifier
+from classfier import FrutifyResnet101
 
 if __name__ == "__main__":
     # cmd argparse
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     # there are 8 classes in the dataset
     n_classes = 8
 
-    clf = FrutifyClassifier(n_classes, 1e-3)
+    clf = FrutifyResnet101(n_classes, 1e-3)
 
     if args.device == "gpu":
         trainer = pl.Trainer(gpus=args.gpu_id, max_epochs=args.epochs)
