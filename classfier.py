@@ -54,7 +54,7 @@ class FrutifyResnet101(pl.LightningModule):
         image, label = batch["image"], batch["label"]
 
         out = self.forward(image)
-        loss = F.nll_loss(out, label)
+        loss = F.cross_entropy(out, label)
 
         return {
             "loss": loss
@@ -64,21 +64,19 @@ class FrutifyResnet101(pl.LightningModule):
         image, label = batch["image"], batch["label"]
 
         out = self(image)
-        loss = F.nll_loss(out, label)
+        loss = F.cross_entropy(out, label)
 
         # log validation loss to progress bar
-        self.log('validation_loss', loss, prog_bar=True, on_step=True)
+        self.log('validation_loss', loss, prog_bar=True)
 
     def test_step(self, batch, batch_index):
         image, true_label = batch["image"], batch["label"]
 
-        pred = self(image)
-        loss = F.nll_loss(pred, true_label)
+        out = self(image)
+        pred, _ = torch.max(out, dim=1)
 
         self.accuracy(pred, true_label)
         self.f1(pred, true_label)
-
-        self.log('test_loss', loss, prog_bar=True, on_step=True)
 
     def test_end(self, outputs):
         accuracy = self.accuracy.compute()

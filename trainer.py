@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     # load data and create train test validation split
     all_file_names = get_all_file_names()
-    t, v, ts = create_train_test_dev_set(all_file_names, 0.8)
+    t, v, ts = create_train_test_dev_set(all_file_names, args.split)
 
     # datasets
     train_dataset = FruitImageDataset(IMAGE_DIR_ROOT, t)
@@ -58,10 +58,14 @@ if __name__ == "__main__":
     # there are 8 classes in the dataset
     n_classes = 8
 
-    clf = FrutifyResnet101(n_classes, 1e-3)
+    clf = FrutifyResnet101(n_classes, args.lr)
 
     if args.device == "gpu":
-        trainer = pl.Trainer(gpus=args.gpu_id, max_epochs=args.epochs)
+        if args.gpu_id:
+            trainer = pl.Trainer(gpus=args.gpu_id, max_epochs=args.epochs)
+        else:
+            trainer = pl.Trainer(gpus=1, max_epochs=args.epochs)
+
     else:
         trainer = pl.Trainer(max_epochs=args.epochs)
 
@@ -69,4 +73,4 @@ if __name__ == "__main__":
     trainer.fit(clf, train_loader, validation_loader)
 
     # test
-    trainer.test(model=clf, test_dataloaders=test_loader)
+    # trainer.test(model=clf, test_dataloaders=test_loader)

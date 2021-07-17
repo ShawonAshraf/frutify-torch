@@ -35,6 +35,11 @@ class FruitImageDataset(Dataset):
         # compose transforms
         self.transform = transforms.Compose([
             Rescale((self.h, self.w)),
+            RotateImage(angle=-90),
+            RotateImage(angle=90),
+            RotateImage(angle=180),
+            RotateImage(angle=-180),
+            RandomCrop(99),
             ToTensor()
         ])
 
