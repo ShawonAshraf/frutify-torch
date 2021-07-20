@@ -65,7 +65,7 @@ if __name__ == "__main__":
         clf = FrutifyInceptionV3(n_classes, args.lr)
 
     if args.device == "gpu":
-        if args.gpu_id:
+        if args.n_gpus:
             trainer = pl.Trainer(gpus=args.n_gpus, max_epochs=args.epochs)
         else:
             trainer = pl.Trainer(gpus=1, max_epochs=args.epochs)
