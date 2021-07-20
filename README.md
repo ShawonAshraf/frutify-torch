@@ -221,6 +221,17 @@ python trainer.py --model resnet101 --device gpu --num_workers 12 --split 0.8 --
 ```
 For more command line options check `trainer.py`
 
+### Running with comet.ml logger
+[come.ml](https://www.comet.ml) logger doesn't work with multiple workers, which is a known issue. So if you want to use comet.ml for model training 
+visualization, don't use the `num_workers` option. (It'll be slower but this is the only way, sadly!).
+
+```bash
+# example for using comet ml logger
+python trainer.py --model inception-v3 --device gpu --split 0.8 --batch_size 16 --epochs 5 --lr 1e-3 --comet True
+```
+
+Check their [website](https://www.comet.ml) on how to get an API key and get started with pytorch and pytorch-lightning.
+
 ## Other implementations
 One of the co-authors, Md Abdul Ahad Chowdhury implemented a C# based rewrite of the project, which you can find 
 [here](https://github.com/maacpiash/Connery).
