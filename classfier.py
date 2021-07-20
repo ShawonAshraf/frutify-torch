@@ -33,7 +33,7 @@ class FrutifyInceptionV3(pl.LightningModule):
         self.classifier = nn.Linear(n_features, num_labels)
 
     def forward(self, x):
-        out = self.feature_model.fc(x)
+        out = self.feature_model(x)
         # out = out.view(out.size(0), -1)
         out = F.log_softmax(self.classifier(out), dim=1)
         return out
