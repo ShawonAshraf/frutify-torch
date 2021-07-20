@@ -207,3 +207,5 @@ lightning_logs/
 __pycache__/
 
 scratchpad.py
+
+saved_models/
