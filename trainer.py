@@ -1,5 +1,6 @@
 import sys
 import os
+import datetime
 import argparse
 
 from image_utils import *
@@ -15,9 +16,9 @@ if __name__ == "__main__":
 
     # add options for argparse
     arg_parser.add_argument("--model", type=str, required=True, help="resnet101 or inception-v3")
-    # if GPU is supplied without a gpu_id, the first gpu in the system will be used
+    # if GPU is supplied without number of gpus to use, the first gpu in the system will be used
     arg_parser.add_argument("--device", type=str, required=True, help="gpu or cpu")
-    arg_parser.add_argument("--gpu_id", type=int)
+    arg_parser.add_argument("--n_gpus", type=int)
     # number of workers to use for dataloader
     arg_parser.add_argument("--num_workers", type=int)
     # split ratio
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
     if args.device == "gpu":
         if args.gpu_id:
-            trainer = pl.Trainer(gpus=args.gpu_id, max_epochs=args.epochs)
+            trainer = pl.Trainer(gpus=args.n_gpus, max_epochs=args.epochs)
         else:
             trainer = pl.Trainer(gpus=1, max_epochs=args.epochs)
 
@@ -75,5 +76,12 @@ if __name__ == "__main__":
     # call trainer
     trainer.fit(clf, train_loader, validation_loader)
 
-    # test
-    # trainer.test(model=clf, test_dataloaders=test_loader)
+    # save trained model
+    # create dir if doesn't exist
+    if not os.path.exists("saved_models"):
+        os.mkdir("saved_models")
+
+    saved_model_name = f"{args.model}_{args.epochs}_{args.batch_size}_{args.lr}_{datetime.datetime.now().timestamp()}.ckpt"
+    trainer.save_checkpoint(os.path.join("saved_models", saved_model_name))
+
+
