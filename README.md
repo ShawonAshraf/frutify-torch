@@ -214,3 +214,7 @@ python trainer.py --model resnet101 --device gpu --split 0.8 --batch_size 16 --e
 python trainer.py --model resnet101 --device gpu --num_workers 12 --split 0.8 --batch_size 16 --epochs 5 --lr 1e-3
 ```
 For more command line options check `trainer.py`
+
+## Other implementations
+One of the co-authors, Md Abdul Ahad Chowdhury implemented a C# based rewrite of the project, which you can find 
+[here](https://github.com/maacpiash/Connery).
