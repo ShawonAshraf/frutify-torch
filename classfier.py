@@ -4,7 +4,11 @@ from torch.nn import functional as F
 import torch.optim as optim
 import torchvision
 import pytorch_lightning as pl
-import torchmetrics
+
+"""
+FrutifyInceptionV3 Model
+Fine tuned from pretrained inception-v3
+"""
 
 
 class FrutifyInceptionV3(pl.LightningModule):
@@ -31,7 +35,6 @@ class FrutifyInceptionV3(pl.LightningModule):
 
     def forward(self, x):
         out = self.feature_model(x)
-        # out = out.view(out.size(0), -1)
         out = F.log_softmax(self.classifier(out), dim=1)
         return out
 
@@ -58,6 +61,12 @@ class FrutifyInceptionV3(pl.LightningModule):
         self.log('validation_loss', loss, prog_bar=True)
 
 
+"""
+FrutifyResnet101
+Fine tuned from resnet101
+"""
+
+
 class FrutifyResnet101(pl.LightningModule):
     def __init__(self, num_labels, learning_rate, model_name="resnet101"):
         super(FrutifyResnet101, self).__init__()
@@ -78,10 +87,7 @@ class FrutifyResnet101(pl.LightningModule):
 
         self.classifier = nn.Linear(n_features, num_labels)
 
-        # metrics
-        self.accuracy = torchmetrics.Accuracy()
-        self.f1 = torchmetrics.F1(num_classes=8)
-
+    # finds the number of dimensions of the last layer of resnet
     def __find_n_features(self):
         inp = torch.autograd.Variable(
             torch.rand(1, 3, 299, 299)
@@ -92,7 +98,10 @@ class FrutifyResnet101(pl.LightningModule):
 
     def forward(self, x):
         out = self.feature_model(x)
+
+        # flatten for resnet inference
         out = out.view(out.size(0), -1)
+        
         out = F.log_softmax(self.classifier(out), dim=1)
         return out
 
