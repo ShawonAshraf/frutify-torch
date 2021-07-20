@@ -202,6 +202,7 @@ For more command line options check `test.py`
 ## Training
 
 Download the dataset from the provided link and copy the `dataset` directory from the zip archive to the project directory.
+ _Note: Use a GPU(>= 8GB VRAM), unless you want to wait for 20 minutes++ for each epoch to finish._
 
 ```bash
 python trainer.py --model  --device  --split  --batch_size  --epochs  --lr 
