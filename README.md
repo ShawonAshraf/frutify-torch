@@ -101,10 +101,10 @@ tuned.
 
 ### Detailed
 
-#### Graphs
-<iframe width="800" height="600" frameborder="0" src="https://www.comet.ml/embedded-panel/?chartId=DDaVP3-loss&projectId=f1963281d29547269678eca5f228dd0c&viewId=TOC3133xtC83u0nddC557DSLi"></iframe>
+#### Graphs (from comet.ml)
+![training](./loss,validation_loss%20VS%20step.svg)
 
-
+The interactive version of this graph can be found [here](https://www.comet.ml/embedded-panel/?chartId=DDaVP3-loss&projectId=f1963281d29547269678eca5f228dd0c&viewId=TOC3133xtC83u0nddC557DSLi).
 #### Metrics
 
 ```text
