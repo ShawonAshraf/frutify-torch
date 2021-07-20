@@ -48,7 +48,10 @@ class FrutifyInceptionV3(pl.LightningModule):
         loss = F.cross_entropy(out, label)
 
         return {
-            "loss": loss
+            "loss": loss,
+            "log": {
+                "train_loss" : loss
+            }
         }
 
     def validation_step(self, batch, batch_index):
@@ -59,6 +62,13 @@ class FrutifyInceptionV3(pl.LightningModule):
 
         # log validation loss to progress bar
         self.log('validation_loss', loss, prog_bar=True)
+
+        return {
+            "val_loss": loss,
+            "log": {
+                "val_loss": loss
+            }
+        }
 
 
 """
