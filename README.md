@@ -101,7 +101,12 @@ tuned.
 
 ### Detailed
 
-#### Inception-V3
+#### Graphs
+<iframe width="800" height="600" frameborder="0" src="https://www.comet.ml/embedded-panel/?chartId=DDaVP3-loss&projectId=f1963281d29547269678eca5f228dd0c&viewId=TOC3133xtC83u0nddC557DSLi"></iframe>
+
+
+#### Metrics
+
 ```text
 Inception-V3
 
@@ -121,11 +126,6 @@ rotten_banana       0.71      0.75      0.73        20
  weighted avg       0.80      0.80      0.80       224
 
 ```
-
-#### Resnet101
-
-<iframe width="800" height="600" frameborder="0" src="https://www.comet.ml/embedded-panel/?chartId=DDaVP3-loss&projectId=f1963281d29547269678eca5f228dd0c&viewId=TOC3133xtC83u0nddC557DSLi"></iframe>
-
 
 ```text
 Resnet101
