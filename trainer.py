@@ -7,7 +7,7 @@ from dataset import FruitImageDataset
 from torch.utils.data import DataLoader
 
 import pytorch_lightning as pl
-from classfier import FrutifyResnet101
+from classfier import FrutifyResnet101, FrutifyInceptionV3
 
 if __name__ == "__main__":
     # cmd argparse
@@ -58,7 +58,10 @@ if __name__ == "__main__":
     # there are 8 classes in the dataset
     n_classes = 8
 
-    clf = FrutifyResnet101(n_classes, args.lr)
+    if args.model == "resnet101":
+        clf = FrutifyResnet101(n_classes, args.lr)
+    else:
+        clf = FrutifyInceptionV3(n_classes, args.lr)
 
     if args.device == "gpu":
         if args.gpu_id:

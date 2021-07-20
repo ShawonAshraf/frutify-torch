@@ -10,14 +10,66 @@ import pytorch_lightning as pl
 import torchmetrics
 
 
-class FrutifyResnet101(pl.LightningModule):
-    def __init__(self, num_labels, learning_rate):
-        super(FrutifyResnet101, self).__init__()
+class FrutifyInceptionV3(pl.LightningModule):
+    def __init__(self, num_labels, learning_rate, model_name="inception_v3"):
+        super(FrutifyInceptionV3, self).__init__()
+
+        self.model_name = model_name
+        self.num_labels = num_labels
+        self.learning_rate = learning_rate
 
         self.save_hyperparameters()
 
+        # disable aux logits
+        self.feature_model = torchvision.models.inception_v3(pretrained=True, progress=True, aux_logits=False)
+
+        # freeze params
+        for param in self.feature_model.parameters():
+            param.requires_grad = False
+
+        # fc layer of inceptionv3 gives 1000 dim output
+        n_features = 1000
+
+        self.classifier = nn.Linear(n_features, num_labels)
+
+    def forward(self, x):
+        out = self.feature_model.fc(x)
+        # out = out.view(out.size(0), -1)
+        out = F.log_softmax(self.classifier(out), dim=1)
+        return out
+
+    def configure_optimizers(self):
+        return optim.Adam(self.parameters(), lr=self.learning_rate)
+
+    def training_step(self, batch, batch_index):
+        image, label = batch["image"], batch["label"]
+
+        out = self.forward(image)
+        loss = F.cross_entropy(out, label)
+
+        return {
+            "loss": loss
+        }
+
+    def validation_step(self, batch, batch_index):
+        image, label = batch["image"], batch["label"]
+
+        out = self(image)
+        loss = F.cross_entropy(out, label)
+
+        # log validation loss to progress bar
+        self.log('validation_loss', loss, prog_bar=True)
+
+
+class FrutifyResnet101(pl.LightningModule):
+    def __init__(self, num_labels, learning_rate, model_name="resnet101"):
+        super(FrutifyResnet101, self).__init__()
+
+        self.model_name = model_name
         self.num_labels = num_labels
         self.learning_rate = learning_rate
+
+        self.save_hyperparameters()
 
         self.feature_model = torchvision.models.resnet18(pretrained=True, progress=True)
         self.feature_model.eval()
@@ -68,23 +120,3 @@ class FrutifyResnet101(pl.LightningModule):
 
         # log validation loss to progress bar
         self.log('validation_loss', loss, prog_bar=True)
-
-    def test_step(self, batch, batch_index):
-        image, true_label = batch["image"], batch["label"]
-
-        out = self(image)
-        pred, _ = torch.max(out, dim=1)
-
-        self.accuracy(pred, true_label)
-        self.f1(pred, true_label)
-
-    def test_end(self, outputs):
-        accuracy = self.accuracy.compute()
-        f1 = self.f1.compute()
-
-        print()
-        print("=============================")
-        print(f"accuracy = {accuracy}")
-        print(f"f1 = {f1}")
-        print("==============================")
-        print()
