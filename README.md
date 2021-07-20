@@ -28,7 +28,7 @@ tuned.
 - `fresh_apple`, `rotten_apple`, `fresh_orange`, `rotten_orange`, `fresh_banana`, `rotten_banana`, `fresh_mango`, `rotten_mango`
 - Link to dataset: [Dataset](https://1drv.ms/u/s!AvaDN9CoqMWhidF_QP41wcJMlQWkSA?e=NKU9J1)
 
-## Model Information
+## Training Setup
 <table>
     <tr>
         <th>Pretrained model name</th>
