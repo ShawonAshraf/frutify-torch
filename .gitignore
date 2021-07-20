@@ -213,3 +213,5 @@ saved_models/
 frutify-torch/3fccaa3cade2435faac7d6d1f212facf/checkpoints/
 
 frutify-torch/f3e18e0f467b45f1825808b7928054be/checkpoints/
+
+*.ckpt
