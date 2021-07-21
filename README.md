@@ -222,7 +222,7 @@ python trainer.py --model resnet101 --device gpu --num_workers 12 --split 0.8 --
 For more command line options check `trainer.py`
 
 ### Running with comet.ml logger
-[come.ml](https://www.comet.ml) logger doesn't work with multiple workers, which is a known issue. So if you want to use comet.ml for model training 
+[comet.ml](https://www.comet.ml) logger doesn't work with multiple workers, which is a known issue. So if you want to use comet.ml for model training 
 visualization, don't use the `num_workers` option. (It'll be slower but this is the only way, sadly!).
 
 ```bash
