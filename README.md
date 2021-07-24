@@ -77,24 +77,24 @@ tuned.
 
 <tr>
     <td>Inception-V3</td>
-    <td>0.80</td>
-    <td>0.78</td>
-    <td>0.80</td>
-    <td>0.79</td>
-    <td>0.80</td>
-    <td>0.78</td>
-    <td>0.80</td>
+    <td>0.83</td>
+    <td>0.83</td>
+    <td>0.83</td>
+    <td>0.83</td>
+    <td>0.84</td>
+    <td>0.83</td>
+    <td>0.83</td>
 </tr>
 
 <tr>
     <td>Resnet101</td>
-    <td>0.95</td>
-    <td>0.94</td>
-    <td>0.95</td>
-    <td>0.94</td>
-    <td>0.95</td>
-    <td>0.94</td>
-    <td>0.95</td>
+    <td>0.93</td>
+    <td>0.93</td>
+    <td>0.93</td>
+    <td>0.93</td>
+    <td>0.93</td>
+    <td>0.93</td>
+    <td>0.93</td>
 </tr>
 
 </table>
@@ -108,42 +108,46 @@ The interactive version of this graph can be found [here](https://www.comet.ml/e
 #### Metrics
 
 ```text
-Inception-V3
+*************************
+inception-v3
 
-              precision    recall  f1-score   support
-
-  fresh_apple       0.82      0.86      0.84        49
- rotten_apple       0.69      0.55      0.61        20
- fresh_orange       0.85      0.92      0.88        24
-rotten_orange       0.79      0.81      0.80        27
- fresh_banana       0.92      0.92      0.92        36
-rotten_banana       0.71      0.75      0.73        20
-  fresh_mango       0.72      0.85      0.78        27
- rotten_mango       0.86      0.57      0.69        21
-
-     accuracy                           0.80       224
-    macro avg       0.79      0.78      0.78       224
- weighted avg       0.80      0.80      0.80       224
-
-```
-
-```text
-Resnet101
 
                precision    recall  f1-score   support
 
-  fresh_apple       0.98      0.98      0.98        46
- rotten_apple       0.91      0.87      0.89        23
- fresh_orange       0.90      1.00      0.95        27
-rotten_orange       1.00      0.84      0.91        25
- fresh_banana       1.00      0.97      0.98        31
-rotten_banana       0.92      1.00      0.96        23
-  fresh_mango       0.92      0.92      0.92        25
- rotten_mango       0.92      0.96      0.94        24
+  fresh_apple       0.80      0.86      0.83        43
+ rotten_apple       0.72      0.68      0.70        19
+ fresh_orange       0.76      0.81      0.79        27
+rotten_orange       0.82      0.77      0.79        30
+ fresh_banana       0.94      0.91      0.92        33
+rotten_banana       0.85      1.00      0.92        17
+  fresh_mango       0.91      0.88      0.90        34
+ rotten_mango       0.83      0.71      0.77        21
 
-     accuracy                           0.95       224
-    macro avg       0.94      0.94      0.94       224
- weighted avg       0.95      0.95      0.95       224
+     accuracy                           0.83       224
+    macro avg       0.83      0.83      0.83       224
+ weighted avg       0.84      0.83      0.83       224
+
+*************************
+
+*************************
+resnet101
+
+               precision    recall  f1-score   support
+
+  fresh_apple       0.95      0.98      0.97        43
+ rotten_apple       0.89      0.84      0.86        19
+ fresh_orange       0.87      0.96      0.91        27
+rotten_orange       0.93      0.83      0.88        30
+ fresh_banana       1.00      1.00      1.00        33
+rotten_banana       1.00      1.00      1.00        17
+  fresh_mango       0.94      0.91      0.93        34
+ rotten_mango       0.86      0.90      0.88        21
+
+     accuracy                           0.93       224
+    macro avg       0.93      0.93      0.93       224
+ weighted avg       0.93      0.93      0.93       224
+
+*************************
 
 ```
 
@@ -191,16 +195,16 @@ use to run inference :
 </tr>
 </table>
 
-## Inference
+## Testing
 Download and store the saved model in `saved_models` directory. Or you can save elsewhere and pass the path to the script.
 ```bash
-python test.py --model --split 0.8 --batch_size --saved_path
+python test.py --inception_path --resnet_path --split 0.8 --batch_size --saved_path
 # example
-python test.py --model resnet101 --split 0.8 --batch_size 16 --saved_path "saved_models/resnet101_5_16_0.001_1626743414.734695.ckpt"
+python test.py --inception_path "./saved_models/inception-v3_5_16_0.001_1626740279.94928.ckpt" --resnet_path "./saved_models/resnet101_5_16_0.001_1626743414.734695.ckpt" --batch_size 16 --split 0.8  
 
 # note : if you have a powerful multicore CPU, you may want to use the --num_workers option to speed up
 # data loading, pass the number of cores you want to use.
-python test.py --model resnet101 --num_workers 12 --split 0.8 --batch_size 16 --saved_path "saved_models/resnet101_5_16_0.001_1626743414.734695.ckpt"
+python test.py --inception_path "./saved_models/inception-v3_5_16_0.001_1626740279.94928.ckpt" --resnet_path "./saved_models/resnet101_5_16_0.001_1626743414.734695.ckpt" --num_workers 2 --batch_size 16 --split 0.8  
 ```
 
 For more command line options check `test.py`

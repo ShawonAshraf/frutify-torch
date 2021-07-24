@@ -14,20 +14,45 @@ from sklearn.metrics import classification_report
 import pytorch_lightning as pl
 from classfier import FrutifyResnet101, FrutifyInceptionV3
 
+
+"""
+runs inference on the test set for a given model
+"""
+
+
+def run_inference(model, dataset):
+    predicted = list()
+    ground_truths = list()
+
+    for idx, batch in enumerate(tqdm(test_loader), 0):
+        image, ground_truth = batch["image"], batch["label"]
+        ground_truths.extend(ground_truth.cpu().detach().numpy())
+
+        pred = model(image)
+        # get the label index with the max probability
+        pred = torch.argmax(pred, dim=1)
+
+        predicted.extend(pred.cpu().detach().numpy())
+
+    return predicted, ground_truths
+
+
 if __name__ == "__main__":
     # cmd argparse
     arg_parser = argparse.ArgumentParser()
 
-    # add options for argparse
-    arg_parser.add_argument("--model", type=str, required=True, help="resnet101 or inception-v3")
+    arg_parser.add_argument("--inception_path", type=str, required=True,
+                            help="path for the saved inception model")
 
-    arg_parser.add_argument("--saved_path", type=str, required=True, help="path to the saved model")
+    arg_parser.add_argument("--resnet_path", type=str,
+                            required=True, help="path for the resnet model")
 
     # number of workers to use for dataloader
     arg_parser.add_argument("--num_workers", type=int)
 
     # split ratio
-    arg_parser.add_argument("--split", type=float, default=0.8, required=True, help="train-test split ratio")
+    arg_parser.add_argument("--split", type=float, default=0.8,
+                            required=True, help="train-test split ratio")
 
     # batch size
     arg_parser.add_argument("--batch_size", type=int, required=True)
@@ -43,42 +68,37 @@ if __name__ == "__main__":
 
     # data loaders
     if args.num_workers:
-        test_loader = DataLoader(test_dataset, batch_size=args.batch_size, num_workers=args.num_workers)
+        test_loader = DataLoader(
+            test_dataset, batch_size=args.batch_size, num_workers=args.num_workers)
     else:
         # revert to default
         test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
 
     # =================================================
-    # train
     # there are 8 classes in the dataset
     n_classes = 8
 
-    # model path
-    # sanitize for os file separator conventions
-    model_path = os.path.abspath(args.saved_path)
+    # init models
+    saved_models = dict()
+    saved_models["inception-v3"] = FrutifyInceptionV3.load_from_checkpoint(
+        args.inception_path)
 
-    if args.model == "resnet101":
-        clf = FrutifyResnet101.load_from_checkpoint(model_path)
-    else:
-        clf = FrutifyInceptionV3.load_from_checkpoint(model_path)
-
-    # run test
-    predicted = list()
-    ground_truths = list()
-
-    for idx, batch in enumerate(tqdm(test_loader), 0):
-        image, ground_truth = batch["image"], batch["label"]
-        ground_truths.extend(ground_truth.cpu().detach().numpy())
-
-        pred = clf(image)
-        # get the label index with the max probability
-        pred = torch.argmax(pred, dim=1)
-
-        predicted.extend(pred.cpu().detach().numpy())
-
-    # classification report
+    saved_models["resnet101"] = FrutifyResnet101.load_from_checkpoint(
+        args.resnet_path)
 
     # get the target labels of the dataset
     target_labels = generate_labels()
-    print(classification_report(y_true=ground_truths, y_pred=predicted, target_names=target_labels))
 
+    # run test
+    for model_name in saved_models.keys():
+        print("*" * 25)
+        print(f"{model_name}")
+        print()
+        predicted, ground_truths = run_inference(
+            saved_models[model_name], test_dataset)
+
+        # classification report
+        print(classification_report(y_true=ground_truths,
+                                    y_pred=predicted, target_names=target_labels))
+        print("*" * 25)
+        print()
