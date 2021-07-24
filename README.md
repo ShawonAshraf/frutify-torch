@@ -235,3 +235,18 @@ Check their [website](https://www.comet.ml) on how to get an API key and get sta
 ## Other implementations
 One of the co-authors, Md Abdul Ahad Chowdhury implemented a C# based rewrite of the project, which you can find 
 [here](https://github.com/maacpiash/Connery).
+
+## Citing the original paper
+
+``` 
+@article{ashraf2019fruit,
+  title={Fruit Image Classification Using Convolutional Neural Networks},
+  author={Ashraf, Shawon and Kadery, Ivan and Chowdhury, Md Abdul Ahad and Mahbub, Tahsin Zahin and Rahman, Rashedur M},
+  journal={International Journal of Software Innovation (IJSI)},
+  volume={7},
+  number={4},
+  pages={51--70},
+  year={2019},
+  publisher={IGI Global}
+}
+```
