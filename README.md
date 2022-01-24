@@ -10,7 +10,7 @@ A `pytorch` rewrite of the [Fruit Image Classification](https://github.com/Shawo
 ## A little note
 Much of the original dataset was lost due to hardware failure and has made it difficult to reproduce the results in our
 paper on the project. The models trained here are trained with recovered data and results may vary. So, in that sense, this 
-repo is not a reproduction of the original work.
+repo is not an actual reproduction of the original work.
 
 ## Pre trained models in use
 Model source : [Torchvision](https://pytorch.org/vision/stable/models.html)
